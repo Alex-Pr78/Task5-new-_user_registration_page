@@ -6,6 +6,7 @@
   border-radius: 8px;
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
+  box-shadow: 10px 10px 10px ;
 }
 
 .form {
@@ -39,11 +40,15 @@
   padding: 10px 15px;
   font-size: 16px;
   border-radius: 4px;
+  background: #4caf50;
   border: none;
   color: white;
   font-weight: bold;
   transition: background-color 0.3s ease;
   cursor: pointer;
+  &:hover {
+    background: #1b941f;
+  }
 }
 
 .button:disabled {
