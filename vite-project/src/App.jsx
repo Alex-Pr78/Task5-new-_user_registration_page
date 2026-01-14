@@ -38,28 +38,23 @@ export const App = () => {
     const formData = getState();
     
     const validationErrors = {};
-    if (!formData.email) {
-      validationErrors.email = "Email обязателен";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
       validationErrors.email = "Неверный формат email";
     }
 
-    if (!formData.password) {
-      validationErrors.password = "Пароль обязателен";
-    } else if (formData.password.length < 6) {
+    if (formData.password.length < 6) {
       validationErrors.password = "Пароль должен быть не менее 6 символов";
     }
 
-    if (!formData.confirmPassword) {
-      validationErrors.confirmPassword = "Подтвердите пароль";
-    } else if (formData.confirmPassword !== formData.password) {
+    if (formData.confirmPassword !== formData.password) {
       validationErrors.confirmPassword = "Пароли не совпадают";
     }
 
     setErrors(validationErrors);
 
+    // Если в объекте validationErrors нет ошибок 
     if (Object.keys(validationErrors).length === 0) {
-      sendData(formData);
+      sendData(formData); // отправляет данные формы
     }
   };
 
