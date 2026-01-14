@@ -1,29 +1,6 @@
 import { useState } from "react";
-import styles from "./App.module.css";
-
-const initialState = {
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
-
-const useStore = () => {
-  const [state, setState] = useState(initialState);
-
-  return {
-    getState: () => state,
-    updateState: (fieldName, newValue) => {
-      setState({ ...state, [fieldName]: newValue });
-    },
-    resetState: () => {
-      setState(initialState);
-    },
-  };
-};
-
-const sendData = (formData) => {
-  console.log(formData);
-};
+import { RegisterForm } from "./Components/RegisterForm";
+import { useStore, sendData } from "./Components/useFormStore"
 
 export const App = () => {
   const { getState, updateState, resetState: resetStoreState } = useStore();
@@ -36,7 +13,7 @@ export const App = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     const formData = getState();
-    
+
     const validationErrors = {};
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
       validationErrors.email = "Неверный формат email";
@@ -52,7 +29,7 @@ export const App = () => {
 
     setErrors(validationErrors);
 
-    // Если в объекте validationErrors нет ошибок 
+    // Если в объекте validationErrors нет ошибок
     if (Object.keys(validationErrors).length === 0) {
       sendData(formData); // отправляет данные формы
     }
@@ -63,61 +40,21 @@ export const App = () => {
     setErrors({});
   };
 
-  const { email, password, confirmPassword } = getState();
+  const formData = getState();
   const isFormValid =
-    Object.keys(errors).length === 0 && email && password && confirmPassword;
+    Object.keys(errors).length === 0 &&
+    formData.email &&
+    formData.password &&
+    formData.confirmPassword;
 
   return (
-    <div className={styles.container}>
-      <h2>Регистрация</h2>
-      <form className={styles.form} onSubmit={onSubmit} noValidate>
-        <label className={styles.label}>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={email}
-            className={styles.input}
-            onChange={onChange}
-            autoComplete="email"
-          />
-          {errors.email && <p className={styles.error}>{errors.email}</p>}
-        </label>
-
-        <label className={styles.label}>
-          Пароль:
-          <input
-            type="password"
-            name="password"
-            value={password}
-            className={styles.input}
-            onChange={onChange}
-            autoComplete="new-password"
-          />
-          {errors.password && <p className={styles.error}>{errors.password}</p>}
-        </label>
-
-        <label className={styles.label}>
-          Повторите пароль:
-          <input
-            type="password"
-            name="confirmPassword"
-            value={confirmPassword}
-            className={styles.input}
-            onChange={onChange}
-            autoComplete="new-password"
-          />
-          {errors.confirmPassword && (
-            <p className={styles.error}>{errors.confirmPassword}</p>
-          )}
-        </label>
-        <button type="submit" disabled={!isFormValid} className={styles.button}>
-          Зарегистрироваться
-        </button>
-        <button type="button" onClick={resetState} className={styles.button}>
-          Сброс
-        </button>
-      </form>
-    </div>
+    <RegisterForm
+      formData={formData}
+      errors={errors}
+      onChange={onChange}
+      onSubmit={onSubmit}
+      onReset={resetState}
+      isFormValid={isFormValid}
+    />
   );
 };
