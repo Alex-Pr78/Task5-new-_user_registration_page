@@ -1,20 +1,37 @@
 import { useState } from "react";
 import styles from "./App.module.css";
 
+const initialState = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+const useStore = () => {
+  const [state, setState] = useState(initialState);
+
+  return {
+    getState: () => state,
+    updateState: (filedName, newValue) => {
+      setState({ ...state, [filedName]: newValue });
+    },
+  };
+};
+
 const sendData = (formData) => {
-  console.log(formData)
+  console.log(formData);
 };
 
 export const App = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { getState, updateState } = useStore();
 
   const onSubmit = (event) => {
     event.preventDefault();
 
-    sendData({ email, password, confirmPassword });
+    sendData(getState());
   };
+
+  const { email, password, confirmPassword } = getState();
 
   return (
     <>
@@ -28,7 +45,7 @@ export const App = () => {
               name="email"
               value={email}
               className={styles.input}
-              onChange={({ target }) => setEmail(target.value)}
+              onChange={({ target }) => updateState("email", target.value)}
             />
             {<p className={styles.error}></p>}
           </label>
@@ -40,7 +57,7 @@ export const App = () => {
               name="password"
               value={password}
               className={styles.input}
-              onChange={({ target }) => setPassword(target.value)}
+              onChange={({ target }) => updateState("password", target.value)}
             />
             {<p className={styles.error}></p>}
           </label>
@@ -52,7 +69,9 @@ export const App = () => {
               name="confirmPassword"
               value={confirmPassword}
               className={styles.input}
-              onChange={({ target }) => setConfirmPassword(target.value)}
+              onChange={({ target }) =>
+                updateState("confirmPassword", target.value)
+              }
             />
             {<p className={styles.error}></p>}
           </label>
